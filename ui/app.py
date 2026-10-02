@@ -39,13 +39,14 @@ class OfflineTranslatorApp(ctk.CTk):
         # Application Window Configuration
         self.title("Lumina AI - Local Offline Neural Translator")
         self.geometry("1160 x 740")
-        self.minsize(960, 620)
+        self.minsize(380, 600)
 
         # State Variables
         self.debounce_timer: Optional[str] = None
         self.is_translating = False
         self.last_detected_name = ""
         self.appearance_mode = "Dark"
+        self.current_layout_mode = "desktop"
 
         # Language Registry Data
         self.installed_langs: List[Dict[str, str]] = []
@@ -59,8 +60,9 @@ class OfflineTranslatorApp(ctk.CTk):
         self._build_workspace()
         self._build_status_bar()
 
-        # Bind window close event
+        # Bind events
         self.protocol("WM_DELETE_WINDOW", self._on_close)
+        self.bind("<Configure>", self._on_window_resize)
 
     def _refresh_language_registry(self):
         """Fetches installed language packages from OfflineTranslator core."""
@@ -604,6 +606,44 @@ class OfflineTranslatorApp(ctk.CTk):
         else:
             ctk.set_appearance_mode("Light")
             self.appearance_mode = "Light"
+
+    def _on_window_resize(self, event=None):
+        """Dynamically adapts GUI layout between mobile stacked card view and desktop split view."""
+        if event and event.widget != self:
+            return
+        width = self.winfo_width()
+        if width < 740 and self.current_layout_mode != "mobile":
+            self.current_layout_mode = "mobile"
+            self._apply_mobile_layout()
+        elif width >= 740 and self.current_layout_mode != "desktop":
+            self.current_layout_mode = "desktop"
+            self._apply_desktop_layout()
+
+    def _apply_mobile_layout(self):
+        """Configures stacked vertical single-column card layout for narrow mobile screens."""
+        self.workspace.columnconfigure(0, weight=1)
+        self.workspace.columnconfigure(1, weight=0)
+        self.workspace.columnconfigure(2, weight=0)
+        self.workspace.rowconfigure(0, weight=1)
+        self.workspace.rowconfigure(1, weight=0)
+        self.workspace.rowconfigure(2, weight=1)
+
+        self.left_card.grid(row=0, column=0, sticky="nsew", padx=0, pady=(0, 4))
+        self.center_card.grid(row=1, column=0, sticky="ew", padx=0, pady=4)
+        self.right_card.grid(row=2, column=0, sticky="nsew", padx=0, pady=(4, 0))
+
+    def _apply_desktop_layout(self):
+        """Configures 2-column side-by-side card layout for widescreen desktop displays."""
+        self.workspace.columnconfigure(0, weight=1)
+        self.workspace.columnconfigure(1, weight=0)
+        self.workspace.columnconfigure(2, weight=1)
+        self.workspace.rowconfigure(0, weight=1)
+        self.workspace.rowconfigure(1, weight=0)
+        self.workspace.rowconfigure(2, weight=0)
+
+        self.left_card.grid(row=0, column=0, sticky="nsew", padx=(0, 6), pady=5)
+        self.center_card.grid(row=0, column=1, sticky="ns", padx=6, pady=5)
+        self.right_card.grid(row=0, column=2, sticky="nsew", padx=(6, 0), pady=5)
 
     def _on_close(self):
         self.executor.shutdown(wait=False)

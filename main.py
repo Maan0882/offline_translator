@@ -22,12 +22,19 @@ from ui.app import OfflineTranslatorApp
 def main():
     parser = argparse.ArgumentParser(description="Lumina Local AI Offline Translator")
     parser.add_argument("--cli", action="store_true", help="Run in CLI mode instead of GUI")
+    parser.add_argument("--web", action="store_true", help="Host mobile HTML5 web app accessible from smartphones over Wi-Fi/Hotspot")
+    parser.add_argument("--port", type=int, default=5000, help="Port number for mobile web app server (default: 5000)")
     parser.add_argument("--from-lang", type=str, default="auto", help="Source language ISO code (e.g. 'en', 'es', 'auto')")
     parser.add_argument("--to-lang", type=str, default="es", help="Target language ISO code (e.g. 'es', 'fr')")
     parser.add_argument("--text", type=str, help="Text to translate in CLI mode")
     args = parser.parse_args()
 
     translator = OfflineTranslator()
+
+    if args.web:
+        from ui.web_app import start_mobile_web_server
+        start_mobile_web_server(translator=translator, port=args.port)
+        return
 
     if args.cli or args.text:
         if not args.text:
