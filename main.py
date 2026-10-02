@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Main Entry Point for Google Translate Offline Desktop Application.
-Launches the CustomTkinter GUI or CLI translation mode.
+Main Entry Point for Lumina Local AI Offline Translator Desktop Application.
+Launches the modern CustomTkinter GUI or CLI translation mode.
 """
 
 import sys
@@ -20,7 +20,7 @@ from ui.app import OfflineTranslatorApp
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Google Translate Offline AI Application")
+    parser = argparse.ArgumentParser(description="Lumina Local AI Offline Translator")
     parser.add_argument("--cli", action="store_true", help="Run in CLI mode instead of GUI")
     parser.add_argument("--from-lang", type=str, default="auto", help="Source language ISO code (e.g. 'en', 'es', 'auto')")
     parser.add_argument("--to-lang", type=str, default="es", help="Target language ISO code (e.g. 'es', 'fr')")

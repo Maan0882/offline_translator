@@ -1,6 +1,6 @@
-# 🌐 Google Translate Offline (Local AI Translator)
+# 🌐 Lumina AI — Local Offline Neural Translator
 
-A fully functional, 100% local, offline clone of Google Translate that runs entirely on your laptop without any internet connection after initial model setup.
+A fully functional, 100% local, privacy-first offline translator that runs entirely on your laptop without any internet connection after initial model setup.
 
 Powered by **Argos Translate** (CTranslate2 open-source NMT framework), **langdetect** for offline language identification, and **CustomTkinter** for a sleek, modern desktop user interface.
 
